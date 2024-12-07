@@ -1,0 +1,63 @@
+{
+	"name": "cs2-killfeed-generator",
+	"version": "0.0.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/chetdejong/cs2-killfeed-generator.git"
+	},
+	"keywords": [
+		"cs2",
+		"cs",
+		"counter-strike",
+		"killfeed"
+	],
+	"author": "ChetdeJong",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/chetdejong/cs2-killfeed-generator/issues"
+	},
+	"homepage": "https://github.com/chetdejong/cs2-killfeed-generator#readme",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc -b && vite build",
+		"formatcss": "prettier -c ./src/**/*.css --write",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"class-variance-authority": "^0.7.1",
+		"clsx": "^2.1.1",
+		"lucide-react": "^0.468.0",
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0",
+		"tailwind-merge": "^2.5.5",
+		"tailwindcss-animate": "^1.0.7"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.15.0",
+		"@types/node": "^22.10.1",
+		"@types/react": "^19.0.1",
+		"@types/react-dom": "^19.0.1",
+		"@vitejs/plugin-react": "^4.3.4",
+		"autoprefixer": "^10.4.20",
+		"babel-plugin-react-compiler": "^19.0.0-beta-df7b47d-20241124",
+		"eslint": "^9.15.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-check-file": "^2.8.0",
+		"eslint-plugin-prettier": "^5.2.1",
+		"eslint-plugin-react": "^7.37.2",
+		"eslint-plugin-react-compiler": "^19.0.0-beta-df7b47d-20241124",
+		"eslint-plugin-react-hooks": "^5.0.0",
+		"eslint-plugin-react-refresh": "^0.4.14",
+		"eslint-plugin-simple-import-sort": "^12.1.1",
+		"globals": "^15.12.0",
+		"postcss": "^8.4.49",
+		"prettier": "^3.4.2",
+		"prettier-plugin-tailwindcss": "^0.6.9",
+		"tailwindcss": "^3.4.16",
+		"typescript": "^5.7.2",
+		"typescript-eslint": "^8.15.0",
+		"vite": "^6.0.1",
+		"vite-tsconfig-paths": "^5.1.4"
+	}
+}
