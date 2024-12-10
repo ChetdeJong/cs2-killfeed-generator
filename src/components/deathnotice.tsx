@@ -55,8 +55,8 @@ export type DeathNoticeT = {
 	attacker: string;
 	victim: string;
 	weapon: string;
-	attackerSide: string;
-	victimSide: string;
+	attackerSide: 'T' | 'CT';
+	victimSide: 'T' | 'CT';
 	blind: boolean;
 	noscope: boolean;
 	smoke: boolean;
@@ -64,7 +64,7 @@ export type DeathNoticeT = {
 	headshot: boolean;
 	inair: boolean;
 	assister?: string;
-	assisterSide?: string;
+	assisterSide?: 'T' | 'CT';
 	flashAssist?: boolean;
 	isLocal?: boolean;
 };
@@ -104,17 +104,14 @@ export default function DeathNotice({ deathnoticeData, className, style, ...prop
 		>
 			<div className='flex items-center px-[10px] pb-[3px] pt-[6px]'>
 				{blind && <DeathNoticeIcon data={{ type: 'blind_kill' }} />}
-				<DeathNoticeLabel side={attackerSide === 'TERRORIST' ? 'T' : 'CT'}>{attacker}</DeathNoticeLabel>
+				<DeathNoticeLabel side={attackerSide}>{attacker}</DeathNoticeLabel>
 				{assister && assisterSide && (
 					<>
-						<DeathNoticeLabel
-							side={assisterSide === 'TERRORIST' ? 'T' : 'CT'}
-							className='mt-[-3px] font-sans text-gray-300'
-						>
+						<DeathNoticeLabel side={assisterSide} className='mt-[-3px] font-sans text-gray-300'>
 							+
 						</DeathNoticeLabel>
 						{flashAssist && <DeathNoticeIcon data={{ type: 'weapon', weapon: 'flashbang_assist' }} />}
-						<DeathNoticeLabel side={assisterSide === 'TERRORIST' ? 'T' : 'CT'}>{assister}</DeathNoticeLabel>
+						<DeathNoticeLabel side={assisterSide}>{assister}</DeathNoticeLabel>
 					</>
 				)}
 				{inair && (
@@ -128,7 +125,7 @@ export default function DeathNotice({ deathnoticeData, className, style, ...prop
 				{smoke && <DeathNoticeIcon data={{ type: 'smoke_kill' }} />}
 				{penetrate && <DeathNoticeIcon data={{ type: 'penetrate' }} />}
 				{headshot && <DeathNoticeIcon data={{ type: 'icon_headshot' }} className='mt-[-4px]' />}
-				<DeathNoticeLabel side={victimSide === 'TERRORIST' ? 'T' : 'CT'}>{victim}</DeathNoticeLabel>
+				<DeathNoticeLabel side={victimSide}>{victim}</DeathNoticeLabel>
 			</div>
 		</div>
 	);
