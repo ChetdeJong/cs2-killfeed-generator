@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+	font-family: 'Stratum2';
+	src: url('/Stratum2-Black.otf') format('opentype');
+}
+
 :root {
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
@@ -19,10 +24,12 @@
 
 body {
 	margin: 0;
+	padding: 0;
 	display: flex;
 	place-items: center;
 	min-width: 320px;
 	min-height: 100vh;
+	color: #e5e7eb;
 }
 
 @layer base {
