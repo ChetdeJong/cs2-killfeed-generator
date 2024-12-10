@@ -8,6 +8,11 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default [
 	{
@@ -21,6 +26,9 @@ export default [
 	{
 		files: ['src/**/*.ts', 'src/**/*.tsx'],
 		languageOptions: {
+			parserOptions: {
+				project: [path.join(__dirname, 'tsconfig.node.json'), path.join(__dirname, 'tsconfig.app.json')]
+			},
 			ecmaVersion: 2020,
 			globals: globals.browser
 		},
