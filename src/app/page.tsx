@@ -1,5 +1,6 @@
-import { Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { toPng } from 'html-to-image';
+import { Settings, Trash2 } from 'lucide-react';
+import { useRef, useState } from 'react';
 
 import DeathNotice, { DeathNoticeT } from '@/components/deathnotice';
 import { Button } from '@/components/ui/button';
@@ -82,6 +83,23 @@ export default function KillfeedGenerator() {
 	const [deathnotices, setDeathnotices] = useState<DeathNoticeT[]>([]);
 	const [currentEntry, setCurrentEntry] = useState<DeathNoticeT>(initialEntryState);
 	const [map, setMap] = useState<(typeof MAPS)[number]>('de_mirage');
+
+	const ref = useRef<HTMLDivElement>(null);
+	const scale = 1;
+	const exportKillfeed = () => {
+		if (!ref.current) return;
+		toPng(ref.current, {
+			cacheBust: true,
+			pixelRatio: scale > 1 ? scale : 1
+		})
+			.then((dataUrl) => {
+				const link = document.createElement('a');
+				link.download = 'killfeed.png';
+				link.href = dataUrl;
+				link.click();
+			})
+			.catch((err) => console.error(err));
+	};
 
 	return (
 		<div className='mx-auto flex w-full flex-col gap-4 p-4 lg:flex-row'>
@@ -166,17 +184,21 @@ export default function KillfeedGenerator() {
 				</div>
 				<div className='flex items-center gap-2'>
 					<Button
-						className='w-full'
+						className='flex-grow'
 						onClick={() => {
 							if (currentEntry.attacker && currentEntry.victim && currentEntry.weapon) {
 								setDeathnotices([...deathnotices, currentEntry]);
 							}
-							console.log(currentEntry);
 						}}
 					>
 						Add entry
 					</Button>
-					<Button className='w-full'>Export Killfeed</Button>
+					<Button disabled={deathnotices.length === 0} onClick={exportKillfeed}>
+						Export Killfeed
+					</Button>
+					<Button size='icon' variant='outline'>
+						<Settings size='1.25rem' />
+					</Button>
 				</div>
 			</div>
 			<div className='w-full space-y-2 lg:w-2/3'>
@@ -208,7 +230,7 @@ export default function KillfeedGenerator() {
 					>
 						Remove all
 					</Button>
-					<div className='z-[1] flex select-none flex-col items-end leading-5'>
+					<div className='z-[1] flex select-none flex-col items-end leading-5' ref={ref}>
 						{deathnotices.length > 0 &&
 							deathnotices.map((dn, i) => {
 								return (
