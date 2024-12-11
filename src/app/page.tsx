@@ -4,9 +4,20 @@ import { useState } from 'react';
 import DeathNotice, { DeathNoticeT } from '@/components/deathnotice';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import WeaponSelection from '@/components/weapon-selection';
 import { cn } from '@/lib/utils';
+
+const MAPS = [
+	'de_vertigo',
+	'de_ancient',
+	'de_anubis',
+	'de_dust2',
+	'de_inferno',
+	'de_mirage',
+	'de_nuke',
+	'de_overpass'
+] as const;
 
 interface NameInputProps {
 	placeholder: string;
@@ -70,6 +81,7 @@ const initialEntryState: DeathNoticeT = {
 export default function KillfeedGenerator() {
 	const [deathnotices, setDeathnotices] = useState<DeathNoticeT[]>([]);
 	const [currentEntry, setCurrentEntry] = useState<DeathNoticeT>(initialEntryState);
+	const [map, setMap] = useState<(typeof MAPS)[number]>('de_mirage');
 
 	return (
 		<div className='mx-auto flex w-full flex-col gap-4 p-4 lg:flex-row'>
@@ -169,23 +181,34 @@ export default function KillfeedGenerator() {
 			</div>
 			<div className='w-full space-y-2 lg:w-2/3'>
 				<div className='mb-2 flex items-center justify-end'>
-					<Select>
+					<Select value={map} onValueChange={(v) => setMap(v as (typeof MAPS)[number])}>
 						<SelectTrigger className='w-[180px]'>
 							<SelectValue placeholder='Select background' />
 						</SelectTrigger>
-						<SelectContent></SelectContent>
+						<SelectContent>
+							{MAPS.map((m, i) => (
+								<SelectItem key={i} value={m}>
+									{m}
+								</SelectItem>
+							))}
+						</SelectContent>
 					</Select>
 				</div>
-				<div className='group flex h-96 justify-between gap-4 rounded-lg bg-secondary pr-2 pt-4'>
+				<div
+					className='group relative flex h-full justify-between gap-4 overflow-hidden rounded-lg bg-secondary bg-cover p-4 pr-2 pt-4 after:absolute after:left-0 after:top-0 after:block after:h-full after:w-full after:bg-black/20 after:backdrop-blur after:content-[""]'
+					style={{
+						backgroundImage: `url(${new URL('/maps/' + map + '.jpg', import.meta.url).href})`
+					}}
+				>
 					<Button
 						variant='destructive'
-						className='ml-4 opacity-0 transition-all disabled:opacity-0 group-hover:opacity-100 disabled:group-hover:opacity-50'
+						className='z-[1] opacity-0 transition-all disabled:opacity-0 group-hover:opacity-100 disabled:group-hover:opacity-50'
 						onClick={() => setDeathnotices([])}
 						disabled={deathnotices.length === 0}
 					>
 						Remove all
 					</Button>
-					<div className='flex select-none flex-col items-end leading-5'>
+					<div className='z-[1] flex select-none flex-col items-end leading-5'>
 						{deathnotices.length > 0 &&
 							deathnotices.map((dn, i) => {
 								return (
@@ -193,9 +216,7 @@ export default function KillfeedGenerator() {
 										<Button
 											variant='destructive'
 											className='mt-1.5 size-[1.85rem] rounded-sm opacity-0 transition-all group-hover:opacity-100'
-											onClick={() =>
-												setDeathnotices((prev) => prev.filter((dn2, i2) => i2 !== i))
-											}
+											onClick={() => setDeathnotices((prev) => prev.filter((_, i2) => i2 !== i))}
 										>
 											<Trash2 size='1.1rem' />
 										</Button>
