@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/components/ui/select';
+import WeaponSelection from '@/components/weapon-selection';
 import { cn } from '@/lib/utils';
 
 export default function KillfeedGenerator() {
@@ -70,12 +71,7 @@ export default function KillfeedGenerator() {
 						</button>
 					</div>
 				</div>
-				<Select>
-					<SelectTrigger className='w-full'>
-						<SelectValue placeholder='Select weapon' />
-					</SelectTrigger>
-					<SelectContent></SelectContent>
-				</Select>
+				<WeaponSelection />
 				<div className='grid grid-cols-3 gap-2 overflow-hidden'>
 					<Button variant='outline'>Headshot</Button>
 					<Button variant='outline'>Wallbang</Button>

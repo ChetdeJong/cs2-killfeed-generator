@@ -36,15 +36,15 @@ body {
 		--foreground: 220 10% 95%;
 		--card: 0 0% 100%;
 		--card-foreground: 222.2 84% 4.9%;
-		--popover: 0 0% 100%;
-		--popover-foreground: 222.2 84% 4.9%;
+		--popover: 220 10% 20%;
+		--popover-foreground: 220 15% 95%;
 		--primary: 220 10% 35%;
 		--primary-foreground: 210 40% 98%;
 		--secondary: 220 10% 70%;
 		--secondary-foreground: 220 15% 10%;
 		--muted: 220 10% 25%;
 		--muted-foreground: 220 10% 60%;
-		--accent: 220 10% 20%;
+		--accent: 220 10% 40%;
 		--accent-foreground: 220 10% 95%;
 		--destructive: 0 70% 50%;
 		--destructive-foreground: 220 10% 95%;
