@@ -1,3 +1,4 @@
+import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 import DeathNotice, { DeathNoticeT } from '@/components/deathnotice';
@@ -48,25 +49,27 @@ function NameInput({ placeholder, value, side, setInputValue, setSide }: NameInp
 	);
 }
 
+const initialEntryState: DeathNoticeT = {
+	attacker: '',
+	victim: '',
+	weapon: '',
+	attackerSide: 'CT',
+	victimSide: 'T',
+	blind: false,
+	noscope: false,
+	smoke: false,
+	penetrate: false,
+	headshot: false,
+	inair: false,
+	assister: '',
+	assisterSide: 'CT',
+	flashAssist: false,
+	isLocal: false
+};
+
 export default function KillfeedGenerator() {
 	const [deathnotices, setDeathnotices] = useState<DeathNoticeT[]>([]);
-	const [currentEntry, setCurrentEntry] = useState<DeathNoticeT>({
-		attacker: '',
-		victim: '',
-		weapon: '',
-		attackerSide: 'CT',
-		victimSide: 'T',
-		blind: false,
-		noscope: false,
-		smoke: false,
-		penetrate: false,
-		headshot: false,
-		inair: false,
-		assister: '',
-		assisterSide: 'CT',
-		flashAssist: false,
-		isLocal: false
-	});
+	const [currentEntry, setCurrentEntry] = useState<DeathNoticeT>(initialEntryState);
 
 	return (
 		<div className='mx-auto flex w-full flex-col gap-4 p-4 lg:flex-row'>
@@ -173,9 +176,34 @@ export default function KillfeedGenerator() {
 						<SelectContent></SelectContent>
 					</Select>
 				</div>
-				<div className='h-96 rounded-lg bg-secondary'>
-					{deathnotices.length > 0 &&
-						deathnotices.map((dn, i) => <DeathNotice key={`dn-${i}`} deathnoticeData={dn} />)}
+				<div className='group flex h-96 justify-between gap-4 rounded-lg bg-secondary pr-2 pt-4'>
+					<Button
+						variant='destructive'
+						className='ml-4 opacity-0 transition-all disabled:opacity-0 group-hover:opacity-100 disabled:group-hover:opacity-50'
+						onClick={() => setDeathnotices([])}
+						disabled={deathnotices.length === 0}
+					>
+						Remove all
+					</Button>
+					<div className='flex select-none flex-col items-end leading-5'>
+						{deathnotices.length > 0 &&
+							deathnotices.map((dn, i) => {
+								return (
+									<div key={`dn-${i}`} className='flex items-center gap-2'>
+										<Button
+											variant='destructive'
+											className='mt-1.5 size-[1.85rem] rounded-sm opacity-0 transition-all group-hover:opacity-100'
+											onClick={() =>
+												setDeathnotices((prev) => prev.filter((dn2, i2) => i2 !== i))
+											}
+										>
+											<Trash2 size='1.1rem' />
+										</Button>
+										<DeathNotice deathnoticeData={dn} />
+									</div>
+								);
+							})}
+					</div>
 				</div>
 			</div>
 		</div>
