@@ -32,16 +32,17 @@ function NameInput({ placeholder, value, side, setInputValue, setSide }: NameInp
 	return (
 		<div className='flex gap-2'>
 			<Input
+				spellCheck={false}
 				value={value}
 				placeholder={placeholder}
 				className='flex-grow'
 				onChange={(ev) => setInputValue(ev.target.value)}
 			/>
-			<div className='inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground'>
+			<div className='inline-flex h-10 items-center justify-center rounded-md border bg-primary/30 text-muted-foreground'>
 				<button
 					className={cn(
-						'inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-						side === 'CT' && 'bg-background text-foreground shadow-sm'
+						'inline-flex h-full w-10 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+						side === 'CT' && 'rounded-l-sm bg-primary text-foreground shadow-sm'
 					)}
 					onClick={() => setSide('CT')}
 				>
@@ -49,8 +50,8 @@ function NameInput({ placeholder, value, side, setInputValue, setSide }: NameInp
 				</button>
 				<button
 					className={cn(
-						'inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-						side === 'T' && 'bg-background text-foreground shadow-sm'
+						'inline-flex h-full w-10 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+						side === 'T' && 'rounded-r-sm bg-primary text-foreground shadow-sm'
 					)}
 					onClick={() => setSide('T')}
 				>
@@ -102,37 +103,39 @@ export default function KillfeedGenerator() {
 	};
 
 	return (
-		<div className='mx-auto flex w-full flex-col gap-4 p-4 lg:flex-row'>
-			<div className='w-full space-y-4 lg:w-1/3'>
-				<div className='flex items-center justify-between'>
-					<h1 className='text-2xl font-bold'>CS2 Killfeed Generator</h1>
+		<div className='flex w-full flex-col gap-4 p-4 lg:flex-row min-[1400px]:px-32'>
+			<div className='w-full space-y-4 pt-2 md:max-lg:relative md:max-lg:flex md:max-lg:items-start md:max-lg:gap-4 lg:w-1/3'>
+				<div className='contents space-y-4 md:max-lg:flex md:max-lg:w-1/2 md:max-lg:flex-col lg:contents'>
+					<div className='flex w-full items-center justify-between max-[500px]:opacity-0'>
+						<h1 className='text-2xl font-bold'>CS2 Killfeed Generator</h1>
+					</div>
+					<NameInput
+						placeholder='Killer name'
+						value={currentEntry.attacker}
+						side={currentEntry.attackerSide}
+						setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, attacker: v }))}
+						setSide={(v) => setCurrentEntry((prev) => ({ ...prev, attackerSide: v }))}
+					/>
+					<NameInput
+						placeholder='Victim name'
+						value={currentEntry.victim}
+						side={currentEntry.victimSide}
+						setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, victim: v }))}
+						setSide={(v) => setCurrentEntry((prev) => ({ ...prev, victimSide: v }))}
+					/>
+					<NameInput
+						placeholder='Assister name (optional)'
+						value={currentEntry.assister || ''}
+						side={currentEntry.assisterSide || 'CT'}
+						setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, assister: v }))}
+						setSide={(v) => setCurrentEntry((prev) => ({ ...prev, assisterSide: v }))}
+					/>
+					<WeaponSelection
+						value={currentEntry.weapon}
+						setValue={(v) => setCurrentEntry((prev) => ({ ...prev, weapon: v }))}
+					/>
 				</div>
-				<NameInput
-					placeholder='Killer name'
-					value={currentEntry.attacker}
-					side={currentEntry.attackerSide}
-					setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, attacker: v }))}
-					setSide={(v) => setCurrentEntry((prev) => ({ ...prev, attackerSide: v }))}
-				/>
-				<NameInput
-					placeholder='Victim name'
-					value={currentEntry.victim}
-					side={currentEntry.victimSide}
-					setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, victim: v }))}
-					setSide={(v) => setCurrentEntry((prev) => ({ ...prev, victimSide: v }))}
-				/>
-				<NameInput
-					placeholder='Assister name (optional)'
-					value={currentEntry.assister || ''}
-					side={currentEntry.assisterSide || 'CT'}
-					setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, assister: v }))}
-					setSide={(v) => setCurrentEntry((prev) => ({ ...prev, assisterSide: v }))}
-				/>
-				<WeaponSelection
-					value={currentEntry.weapon}
-					setValue={(v) => setCurrentEntry((prev) => ({ ...prev, weapon: v }))}
-				/>
-				<div className='grid grid-cols-3 gap-2 overflow-hidden'>
+				<div className='grid grid-cols-3 gap-2 overflow-hidden md:max-lg:w-1/2 md:max-lg:pt-8'>
 					<Button
 						variant={currentEntry.headshot ? 'default' : 'outline'}
 						onClick={() => setCurrentEntry((prev) => ({ ...prev, headshot: !prev.headshot }))}
@@ -146,28 +149,22 @@ export default function KillfeedGenerator() {
 						Wallbang
 					</Button>
 					<Button
-						variant={currentEntry.isLocal ? 'default' : 'outline'}
-						onClick={() => setCurrentEntry((prev) => ({ ...prev, isLocal: !prev.isLocal }))}
-					>
-						Red Border
-					</Button>
-					<Button
 						variant={currentEntry.noscope ? 'default' : 'outline'}
 						onClick={() => setCurrentEntry((prev) => ({ ...prev, noscope: !prev.noscope }))}
 					>
 						Noscope
 					</Button>
 					<Button
-						variant={currentEntry.inair ? 'default' : 'outline'}
-						onClick={() => setCurrentEntry((prev) => ({ ...prev, inair: !prev.inair }))}
-					>
-						In Air
-					</Button>
-					<Button
 						variant={currentEntry.smoke ? 'default' : 'outline'}
 						onClick={() => setCurrentEntry((prev) => ({ ...prev, smoke: !prev.smoke }))}
 					>
 						Through Smoke
+					</Button>
+					<Button
+						variant={currentEntry.inair ? 'default' : 'outline'}
+						onClick={() => setCurrentEntry((prev) => ({ ...prev, inair: !prev.inair }))}
+					>
+						In Air
 					</Button>
 					<Button
 						variant={currentEntry.blind ? 'default' : 'outline'}
@@ -181,9 +178,16 @@ export default function KillfeedGenerator() {
 					>
 						Flash Assist
 					</Button>
-				</div>
-				<div className='flex items-center gap-2'>
 					<Button
+						variant={currentEntry.isLocal ? 'default' : 'outline'}
+						onClick={() => setCurrentEntry((prev) => ({ ...prev, isLocal: !prev.isLocal }))}
+					>
+						Red Border
+					</Button>
+				</div>
+				<div className='flex items-center gap-2 md:max-lg:absolute md:max-lg:bottom-0 md:max-lg:right-0 md:max-lg:w-1/2 md:max-lg:pl-2'>
+					<Button
+						disabled={!(currentEntry.attacker && currentEntry.victim && currentEntry.weapon)}
 						className='flex-grow'
 						onClick={() => {
 							if (currentEntry.attacker && currentEntry.victim && currentEntry.weapon) {
@@ -201,8 +205,8 @@ export default function KillfeedGenerator() {
 					</Button>
 				</div>
 			</div>
-			<div className='w-full space-y-2 lg:w-2/3'>
-				<div className='mb-2 flex items-center justify-end'>
+			<div className='w-full space-y-4 max-lg:space-y-0 lg:w-2/3'>
+				<div className='mb-2 flex items-center justify-end max-lg:absolute max-lg:right-0 max-lg:top-0 max-lg:pr-4 max-lg:pt-4'>
 					<Select value={map} onValueChange={(v) => setMap(v as (typeof MAPS)[number])}>
 						<SelectTrigger className='w-[180px]'>
 							<SelectValue placeholder='Select background' />
@@ -217,14 +221,14 @@ export default function KillfeedGenerator() {
 					</Select>
 				</div>
 				<div
-					className='group relative flex h-full justify-between gap-4 overflow-hidden rounded-lg bg-secondary bg-cover p-4 pr-2 pt-4 after:absolute after:left-0 after:top-0 after:block after:h-full after:w-full after:bg-black/20 after:backdrop-blur after:content-[""]'
+					className='group relative flex h-full justify-between gap-4 overflow-hidden rounded-lg bg-cover p-4 pr-2 pt-4 brightness-90 contrast-[1.1] max-md:min-h-52 md:max-lg:min-h-96'
 					style={{
 						backgroundImage: `url(${new URL('/maps/' + map + '.jpg', import.meta.url).href})`
 					}}
 				>
 					<Button
 						variant='destructive'
-						className='z-[1] opacity-0 transition-all disabled:opacity-0 group-hover:opacity-100 disabled:group-hover:opacity-50'
+						className='z-[1] opacity-0 transition-all disabled:hidden group-hover:opacity-100'
 						onClick={() => setDeathnotices([])}
 						disabled={deathnotices.length === 0}
 					>
@@ -242,7 +246,10 @@ export default function KillfeedGenerator() {
 										>
 											<Trash2 size='1.1rem' />
 										</Button>
-										<DeathNotice deathnoticeData={dn} />
+										<DeathNotice
+											deathnoticeData={dn}
+											className='backdrop-blur animate-in fade-in'
+										/>
 									</div>
 								);
 							})}

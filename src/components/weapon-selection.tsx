@@ -89,29 +89,35 @@ export default function WeaponSelection({ value, setValue }: WeaponSelectionProp
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
-				<Button role='combobox' aria-expanded={open} className='w-full justify-between'>
+				<Button role='combobox' aria-expanded={open} className='w-full justify-between hover:bg-primary'>
 					{WEAPONS[value as keyof typeof WEAPONS] || 'Select weapon...'}
-					<ChevronsUpDown className='opacity-50' />
+					<ChevronsUpDown size='1.25rem' className='opacity-50' />
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className='w-64 p-0'>
+			<PopoverContent className='w-[var(--radix-popover-trigger-width)] p-0'>
 				<Command>
-					<CommandInput placeholder='Search weapon...' />
+					<CommandInput spellCheck={false} placeholder='Search weapon...' />
 					<CommandList>
 						<CommandEmpty>Not found.</CommandEmpty>
 						<CommandGroup>
-							<ScrollArea className='h-[200px]'>
+							<ScrollArea className='h-48'>
 								{Object.entries(WEAPONS).map(([key, displayName]) => (
 									<CommandItem
 										key={key}
 										value={key}
+										className='relative pl-8'
 										onSelect={(currentValue) => {
 											setValue(currentValue === value ? '' : currentValue);
 											setOpen(false);
 										}}
 									>
 										{displayName}
-										<Check className={cn('ml-auto', value === key ? 'opacity-100' : 'opacity-0')} />
+										<Check
+											className={cn(
+												'absolute left-2',
+												value === key ? 'opacity-100' : 'opacity-0'
+											)}
+										/>
 									</CommandItem>
 								))}
 							</ScrollArea>

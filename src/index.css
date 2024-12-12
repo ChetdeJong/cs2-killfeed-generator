@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Display:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,10 +9,23 @@
 	src: url('/Stratum2-Black.otf') format('opentype');
 }
 
+html {
+	box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+	box-sizing: inherit;
+}
+
 :root {
-	font-family: Arial, sans-serif;
-	line-height: 1.5;
+	font-family: "Noto Sans Display", sans-serif;
+	font-optical-sizing: auto;
+	font-style: normal;
+	font-variation-settings: "wdth" 100;
 	font-weight: 500;
+	line-height: 1.5;
 
 	color: rgba(255, 255, 255, 0.87);
 	background-color: #242424;
@@ -30,6 +45,12 @@ body {
 	min-height: 100vh;
 }
 
+#root {
+	overflow: auto;
+	height: 100dvh;
+	scrollbar-gutter: stable both-edges;
+}
+
 @layer base {
 	:root {
 		--background: 208 12% 14%;
@@ -40,15 +61,15 @@ body {
 		--popover-foreground: 220 15% 95%;
 		--primary: 220 10% 35%;
 		--primary-foreground: 210 40% 98%;
-		--secondary: 220 10% 70%;
+		--secondary: 220 5% 60%;
 		--secondary-foreground: 220 15% 10%;
-		--muted: 220 10% 25%;
+		--muted: 220 10% 20%;
 		--muted-foreground: 220 10% 60%;
-		--accent: 220 10% 20%;
+		--accent: 220 15% 20%;
 		--accent-foreground: 220 10% 95%;
-		--destructive: 0 70% 50%;
+		--destructive: 0 75% 40%;
 		--destructive-foreground: 220 10% 95%;
-		--border: 220 10% 85%;
+		--border: 220 10% 35%;
 		--input: 220 10% 40%;
 		--ring: 220 10% 80%;
 		--chart-1: 12 76% 61%;
@@ -68,3 +89,49 @@ body {
 		@apply bg-background text-foreground;
 	}
 }
+
+::-webkit-scrollbar {
+	width: 0.6rem;
+}
+
+::-webkit-scrollbar-track {
+	background: hsl(220, 10%, 35%);
+}
+
+::-webkit-scrollbar-thumb {
+	background: white;
+}
+
+.PopoverContent {
+	animation-duration: 0.6s;
+	animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+.PopoverContent[data-side="top"] {
+	animation-name: slideUp;
+}
+.PopoverContent[data-side="bottom"] {
+	animation-name: slideDown;
+}
+
+@keyframes slideDown {
+	from {
+		opacity: 1;
+		transform: translateY(-100px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes slideUp {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
