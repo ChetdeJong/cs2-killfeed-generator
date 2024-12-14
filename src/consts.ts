@@ -20,3 +20,6 @@ export const DEFAULT_COLORS: Colors = {
 	localBgColor: '#000000',
 	localBgOpacity: 90
 };
+
+export type Resolution = { width: number; height: number };
+export const DEFAULT_RESOLUTION: Resolution = { width: 1920, height: 1080 };

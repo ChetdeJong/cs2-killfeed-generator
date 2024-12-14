@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import WeaponSelection from '@/components/weapon-selection';
-import { DEFAULT_COLORS, MAPS } from '@/consts';
+import { DEFAULT_COLORS, DEFAULT_RESOLUTION, MAPS } from '@/consts';
 import { useLocalStorage } from '@/hooks';
 import { cn } from '@/lib/utils';
 
@@ -73,23 +73,24 @@ const initialEntryState: DeathNoticeT = {
 };
 
 export default function KillfeedGenerator() {
-	const [deathnotices, setDeathnotices] = useState<DeathNoticeT[]>([]);
-	const [currentEntry, setCurrentEntry] = useState<DeathNoticeT>(initialEntryState);
 	const [settingsOpen, setSettingsOpen] = useState(false);
+	const [currentEntry, setCurrentEntry] = useState<DeathNoticeT>(initialEntryState);
+	const [deathnotices, setDeathnotices] = useLocalStorage<DeathNoticeT[]>('deathnotices', []);
 	const [map, setMap] = useLocalStorage<(typeof MAPS)[number]>('map', 'de_mirage');
 	const [currentColors, setCurrentColors] = useLocalStorage('colors', DEFAULT_COLORS);
+	const [resolution, setResolution] = useLocalStorage('resolution', DEFAULT_RESOLUTION);
 
 	const ref = useRef<HTMLDivElement>(null);
-	const scale = 1;
+	const scale = (resolution.height / 1080) * 0.9;
 	const exportKillfeed = () => {
 		if (!ref.current) return;
 		toPng(ref.current, {
 			cacheBust: true,
-			pixelRatio: scale > 1 ? scale : 1
+			pixelRatio: 1
 		})
 			.then((dataUrl) => {
 				const link = document.createElement('a');
-				link.download = 'killfeed.png';
+				link.download = `killfeed_${resolution.width}x${resolution.height}.png`;
 				link.href = dataUrl;
 				link.click();
 			})
@@ -98,12 +99,33 @@ export default function KillfeedGenerator() {
 
 	return (
 		<div className='p-4 min-[1400px]:px-32'>
+			<div
+				ref={ref}
+				className='absolute left-0 top-0 z-[-1] bg-transparent'
+				style={{ width: resolution.width, height: resolution.height }}
+			>
+				<div
+					className='flex flex-col items-end pr-2 pt-16'
+					style={{
+						transform: `scale(${scale > 1 ? scale : 1})`,
+						transformOrigin: 'top right'
+					}}
+				>
+					{deathnotices.length > 0 &&
+						deathnotices.map((dn, i) => {
+							return <DeathNotice key={`dn-hidden-${i}`} deathnoticeData={dn} colors={currentColors} />;
+						})}
+				</div>
+			</div>
+
 			<div className='flex w-full items-end justify-between pb-4'>
-				<h1 className='text-2xl font-bold max-[500px]:absolute max-[500px]:opacity-0'>
-					CS2 Killfeed Generator
-				</h1>
+				<div>
+					<h1 className='text-2xl font-bold max-[520px]:absolute max-[520px]:opacity-0'>
+						CS2 Killfeed Generator
+					</h1>
+				</div>
 				<Select value={map} onValueChange={(v) => setMap(v as (typeof MAPS)[number])}>
-					<SelectTrigger className='w-48 max-[500px]:ml-auto'>
+					<SelectTrigger className='w-48 max-[520px]:ml-auto'>
 						<SelectValue placeholder='Select background' />
 					</SelectTrigger>
 					<SelectContent>
@@ -122,6 +144,8 @@ export default function KillfeedGenerator() {
 						setOpen={setSettingsOpen}
 						colors={currentColors}
 						setColors={setCurrentColors}
+						resolution={resolution}
+						setResolution={setResolution}
 					/>
 				) : (
 					<div className='w-full space-y-4 duration-300 animate-in fade-in-50 slide-in-from-left-1/2 md:max-lg:relative md:max-lg:flex md:max-lg:items-start md:max-lg:gap-4 lg:w-1/3'>
@@ -224,7 +248,7 @@ export default function KillfeedGenerator() {
 					</div>
 				)}
 
-				<div className='min-h-96 w-full space-y-4 max-lg:space-y-0 lg:w-2/3'>
+				<div className='w-full space-y-4 max-lg:space-y-0 md:min-h-96 lg:w-2/3'>
 					<div
 						className='group relative flex h-full justify-between gap-4 overflow-hidden rounded-lg bg-cover p-4 pr-2 pt-4 brightness-90 contrast-[1.1] max-md:min-h-52 md:max-lg:min-h-96'
 						style={{
@@ -239,7 +263,7 @@ export default function KillfeedGenerator() {
 						>
 							Remove all
 						</Button>
-						<div className='z-[1] flex select-none flex-col items-end leading-5' ref={ref}>
+						<div className='z-[1] flex select-none flex-col items-end leading-5'>
 							{deathnotices.length > 0 &&
 								deathnotices.map((dn, i) => {
 									return (
