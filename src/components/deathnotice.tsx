@@ -36,7 +36,7 @@ interface DeathNoticeLabelProps extends React.HTMLAttributes<HTMLLabelElement> {
 	side: 'T' | 'CT';
 }
 
-const DeathNoticeLabel = ({ side, children, className }: DeathNoticeLabelProps) => {
+const DeathNoticeLabel = ({ side, children, className, style }: DeathNoticeLabelProps) => {
 	return (
 		<Label
 			className={cn(
@@ -44,7 +44,7 @@ const DeathNoticeLabel = ({ side, children, className }: DeathNoticeLabelProps) 
 				side === 'T' ? 'text-[#eabe54]' : 'text-[#6f9ce6]',
 				className
 			)}
-			style={{ filter: 'drop-shadow(1px 1px 0px black)' }}
+			style={{ ...style, filter: 'drop-shadow(1px 1px 0px black)' }}
 		>
 			{children}
 		</Label>
@@ -69,11 +69,22 @@ export type DeathNoticeT = {
 	isLocal?: boolean;
 };
 
+export type Colors = {
+	ctColor: string;
+	tColor: string;
+	borderColor: string;
+	bgColor: string;
+	bgOpacity: number;
+	localBgColor: string;
+	localBgOpacity: number;
+};
+
 interface DeathNoticeProps extends React.HTMLAttributes<HTMLDivElement> {
 	deathnoticeData: DeathNoticeT;
+	colors: Colors;
 }
 
-export default function DeathNotice({ deathnoticeData, className, style, ...props }: DeathNoticeProps) {
+export default function DeathNotice({ deathnoticeData, className, colors, style, ...props }: DeathNoticeProps) {
 	const {
 		attacker,
 		victim,
@@ -92,26 +103,55 @@ export default function DeathNotice({ deathnoticeData, className, style, ...prop
 		isLocal
 	} = deathnoticeData;
 
+	const { ctColor, tColor, borderColor, bgColor, bgOpacity, localBgColor, localBgOpacity } = colors;
+
+	const computeHexWithAlpha = (hex: string, opacity: number) => {
+		const scaledValue = Math.round((opacity / 100) * 255);
+		const alpha = scaledValue.toString(16).padStart(2, '0');
+		return `${hex}${alpha}`;
+	};
+
+	const bgColorWithAlpha = computeHexWithAlpha(bgColor, bgOpacity);
+	const localBgColorWithAlpha = computeHexWithAlpha(localBgColor, localBgOpacity);
+
 	return (
 		<div
 			className={cn(
-				'relative mt-1.5 w-fit rounded bg-black/40 text-right transition-all duration-200 ease-out',
-				isLocal && 'border-[3px] border-[#e10000] bg-black/90',
+				'relative mt-1.5 w-fit rounded text-right transition-all duration-200 ease-out',
+				`bg-[${bgColorWithAlpha}]`,
+				isLocal && `border-[3px]`,
 				className
 			)}
-			style={style}
+			style={{
+				backgroundColor: isLocal ? localBgColorWithAlpha : bgColorWithAlpha,
+				borderColor: borderColor
+			}}
 			{...props}
 		>
 			<div className='flex items-center px-[10px] pb-[3px] pt-[6px]'>
 				{blind && <DeathNoticeIcon data={{ type: 'blind_kill' }} />}
-				<DeathNoticeLabel side={attackerSide}>{attacker}</DeathNoticeLabel>
+				<DeathNoticeLabel
+					side={attackerSide}
+					style={{
+						color: attackerSide === 'T' ? tColor : ctColor
+					}}
+				>
+					{attacker}
+				</DeathNoticeLabel>
 				{assister && assisterSide && (
 					<>
 						<DeathNoticeLabel side={assisterSide} className='mt-[-3px] font-sans text-gray-300'>
 							+
 						</DeathNoticeLabel>
 						{flashAssist && <DeathNoticeIcon data={{ type: 'weapon', weapon: 'flashbang_assist' }} />}
-						<DeathNoticeLabel side={assisterSide}>{assister}</DeathNoticeLabel>
+						<DeathNoticeLabel
+							side={assisterSide}
+							style={{
+								color: assisterSide === 'T' ? tColor : ctColor
+							}}
+						>
+							{assister}
+						</DeathNoticeLabel>
 					</>
 				)}
 				{inair && (
@@ -125,7 +165,9 @@ export default function DeathNotice({ deathnoticeData, className, style, ...prop
 				{smoke && <DeathNoticeIcon data={{ type: 'smoke_kill' }} />}
 				{penetrate && <DeathNoticeIcon data={{ type: 'penetrate' }} />}
 				{headshot && <DeathNoticeIcon data={{ type: 'icon_headshot' }} className='mt-[-4px]' />}
-				<DeathNoticeLabel side={victimSide}>{victim}</DeathNoticeLabel>
+				<DeathNoticeLabel side={victimSide} style={{ color: victimSide === 'T' ? tColor : ctColor }}>
+					{victim}
+				</DeathNoticeLabel>
 			</div>
 		</div>
 	);

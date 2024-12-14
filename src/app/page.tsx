@@ -3,22 +3,14 @@ import { Settings, Trash2 } from 'lucide-react';
 import { useRef, useState } from 'react';
 
 import DeathNotice, { DeathNoticeT } from '@/components/deathnotice';
+import SettingsDialog from '@/components/settings';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import WeaponSelection from '@/components/weapon-selection';
+import { DEFAULT_COLORS, MAPS } from '@/consts';
+import { useLocalStorage } from '@/hooks';
 import { cn } from '@/lib/utils';
-
-const MAPS = [
-	'de_vertigo',
-	'de_ancient',
-	'de_anubis',
-	'de_dust2',
-	'de_inferno',
-	'de_mirage',
-	'de_nuke',
-	'de_overpass'
-] as const;
 
 interface NameInputProps {
 	placeholder: string;
@@ -83,7 +75,9 @@ const initialEntryState: DeathNoticeT = {
 export default function KillfeedGenerator() {
 	const [deathnotices, setDeathnotices] = useState<DeathNoticeT[]>([]);
 	const [currentEntry, setCurrentEntry] = useState<DeathNoticeT>(initialEntryState);
-	const [map, setMap] = useState<(typeof MAPS)[number]>('de_mirage');
+	const [settingsOpen, setSettingsOpen] = useState(false);
+	const [map, setMap] = useLocalStorage<(typeof MAPS)[number]>('map', 'de_mirage');
+	const [currentColors, setCurrentColors] = useLocalStorage('colors', DEFAULT_COLORS);
 
 	const ref = useRef<HTMLDivElement>(null);
 	const scale = 1;
@@ -122,105 +116,115 @@ export default function KillfeedGenerator() {
 				</Select>
 			</div>
 			<div className='flex w-full flex-col gap-4 lg:flex-row'>
-				<div className='w-full space-y-4 md:max-lg:relative md:max-lg:flex md:max-lg:items-start md:max-lg:gap-4 lg:w-1/3'>
-					<div className='contents space-y-4 md:max-lg:flex md:max-lg:w-1/2 md:max-lg:flex-col lg:contents'>
-						<NameInput
-							placeholder='Killer name'
-							value={currentEntry.attacker}
-							side={currentEntry.attackerSide}
-							setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, attacker: v }))}
-							setSide={(v) => setCurrentEntry((prev) => ({ ...prev, attackerSide: v }))}
-						/>
-						<NameInput
-							placeholder='Victim name'
-							value={currentEntry.victim}
-							side={currentEntry.victimSide}
-							setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, victim: v }))}
-							setSide={(v) => setCurrentEntry((prev) => ({ ...prev, victimSide: v }))}
-						/>
-						<NameInput
-							placeholder='Assister name (optional)'
-							value={currentEntry.assister || ''}
-							side={currentEntry.assisterSide || 'CT'}
-							setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, assister: v }))}
-							setSide={(v) => setCurrentEntry((prev) => ({ ...prev, assisterSide: v }))}
-						/>
-						<WeaponSelection
-							value={currentEntry.weapon}
-							setValue={(v) => setCurrentEntry((prev) => ({ ...prev, weapon: v }))}
-						/>
+				{settingsOpen ? (
+					<SettingsDialog
+						open={settingsOpen}
+						setOpen={setSettingsOpen}
+						colors={currentColors}
+						setColors={setCurrentColors}
+					/>
+				) : (
+					<div className='w-full space-y-4 duration-300 animate-in fade-in-50 slide-in-from-left-1/2 md:max-lg:relative md:max-lg:flex md:max-lg:items-start md:max-lg:gap-4 lg:w-1/3'>
+						<div className='contents space-y-4 md:max-lg:flex md:max-lg:w-1/2 md:max-lg:flex-col lg:contents'>
+							<NameInput
+								placeholder='Killer name'
+								value={currentEntry.attacker}
+								side={currentEntry.attackerSide}
+								setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, attacker: v }))}
+								setSide={(v) => setCurrentEntry((prev) => ({ ...prev, attackerSide: v }))}
+							/>
+							<NameInput
+								placeholder='Victim name'
+								value={currentEntry.victim}
+								side={currentEntry.victimSide}
+								setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, victim: v }))}
+								setSide={(v) => setCurrentEntry((prev) => ({ ...prev, victimSide: v }))}
+							/>
+							<NameInput
+								placeholder='Assister name (optional)'
+								value={currentEntry.assister || ''}
+								side={currentEntry.assisterSide || 'CT'}
+								setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, assister: v }))}
+								setSide={(v) => setCurrentEntry((prev) => ({ ...prev, assisterSide: v }))}
+							/>
+							<WeaponSelection
+								value={currentEntry.weapon}
+								setValue={(v) => setCurrentEntry((prev) => ({ ...prev, weapon: v }))}
+							/>
+						</div>
+						<div className='grid grid-cols-3 gap-2 overflow-hidden md:max-lg:w-1/2'>
+							<Button
+								variant={currentEntry.headshot ? 'default' : 'outline'}
+								onClick={() => setCurrentEntry((prev) => ({ ...prev, headshot: !prev.headshot }))}
+							>
+								Headshot
+							</Button>
+							<Button
+								variant={currentEntry.penetrate ? 'default' : 'outline'}
+								onClick={() => setCurrentEntry((prev) => ({ ...prev, penetrate: !prev.penetrate }))}
+							>
+								Wallbang
+							</Button>
+							<Button
+								variant={currentEntry.noscope ? 'default' : 'outline'}
+								onClick={() => setCurrentEntry((prev) => ({ ...prev, noscope: !prev.noscope }))}
+							>
+								Noscope
+							</Button>
+							<Button
+								variant={currentEntry.smoke ? 'default' : 'outline'}
+								onClick={() => setCurrentEntry((prev) => ({ ...prev, smoke: !prev.smoke }))}
+							>
+								Through Smoke
+							</Button>
+							<Button
+								variant={currentEntry.inair ? 'default' : 'outline'}
+								onClick={() => setCurrentEntry((prev) => ({ ...prev, inair: !prev.inair }))}
+							>
+								In Air
+							</Button>
+							<Button
+								variant={currentEntry.blind ? 'default' : 'outline'}
+								onClick={() => setCurrentEntry((prev) => ({ ...prev, blind: !prev.blind }))}
+							>
+								Blind
+							</Button>
+							<Button
+								variant={currentEntry.flashAssist ? 'default' : 'outline'}
+								onClick={() => setCurrentEntry((prev) => ({ ...prev, flashAssist: !prev.flashAssist }))}
+							>
+								Flash Assist
+							</Button>
+							<Button
+								variant={currentEntry.isLocal ? 'default' : 'outline'}
+								onClick={() => setCurrentEntry((prev) => ({ ...prev, isLocal: !prev.isLocal }))}
+							>
+								Red Border
+							</Button>
+						</div>
+						<div className='flex items-center gap-2 md:max-lg:absolute md:max-lg:bottom-0 md:max-lg:right-0 md:max-lg:w-1/2 md:max-lg:pl-2'>
+							<Button
+								disabled={!(currentEntry.attacker && currentEntry.victim && currentEntry.weapon)}
+								className='flex-grow'
+								onClick={() => {
+									if (currentEntry.attacker && currentEntry.victim && currentEntry.weapon) {
+										setDeathnotices([...deathnotices, currentEntry]);
+									}
+								}}
+							>
+								Add entry
+							</Button>
+							<Button disabled={deathnotices.length === 0} onClick={exportKillfeed}>
+								Export Killfeed
+							</Button>
+							<Button size='icon' variant='outline' onClick={() => setSettingsOpen(true)}>
+								<Settings size='1.25rem' />
+							</Button>
+						</div>
 					</div>
-					<div className='grid grid-cols-3 gap-2 overflow-hidden md:max-lg:w-1/2'>
-						<Button
-							variant={currentEntry.headshot ? 'default' : 'outline'}
-							onClick={() => setCurrentEntry((prev) => ({ ...prev, headshot: !prev.headshot }))}
-						>
-							Headshot
-						</Button>
-						<Button
-							variant={currentEntry.penetrate ? 'default' : 'outline'}
-							onClick={() => setCurrentEntry((prev) => ({ ...prev, penetrate: !prev.penetrate }))}
-						>
-							Wallbang
-						</Button>
-						<Button
-							variant={currentEntry.noscope ? 'default' : 'outline'}
-							onClick={() => setCurrentEntry((prev) => ({ ...prev, noscope: !prev.noscope }))}
-						>
-							Noscope
-						</Button>
-						<Button
-							variant={currentEntry.smoke ? 'default' : 'outline'}
-							onClick={() => setCurrentEntry((prev) => ({ ...prev, smoke: !prev.smoke }))}
-						>
-							Through Smoke
-						</Button>
-						<Button
-							variant={currentEntry.inair ? 'default' : 'outline'}
-							onClick={() => setCurrentEntry((prev) => ({ ...prev, inair: !prev.inair }))}
-						>
-							In Air
-						</Button>
-						<Button
-							variant={currentEntry.blind ? 'default' : 'outline'}
-							onClick={() => setCurrentEntry((prev) => ({ ...prev, blind: !prev.blind }))}
-						>
-							Blind
-						</Button>
-						<Button
-							variant={currentEntry.flashAssist ? 'default' : 'outline'}
-							onClick={() => setCurrentEntry((prev) => ({ ...prev, flashAssist: !prev.flashAssist }))}
-						>
-							Flash Assist
-						</Button>
-						<Button
-							variant={currentEntry.isLocal ? 'default' : 'outline'}
-							onClick={() => setCurrentEntry((prev) => ({ ...prev, isLocal: !prev.isLocal }))}
-						>
-							Red Border
-						</Button>
-					</div>
-					<div className='flex items-center gap-2 md:max-lg:absolute md:max-lg:bottom-0 md:max-lg:right-0 md:max-lg:w-1/2 md:max-lg:pl-2'>
-						<Button
-							disabled={!(currentEntry.attacker && currentEntry.victim && currentEntry.weapon)}
-							className='flex-grow'
-							onClick={() => {
-								if (currentEntry.attacker && currentEntry.victim && currentEntry.weapon) {
-									setDeathnotices([...deathnotices, currentEntry]);
-								}
-							}}
-						>
-							Add entry
-						</Button>
-						<Button disabled={deathnotices.length === 0} onClick={exportKillfeed}>
-							Export Killfeed
-						</Button>
-						<Button size='icon' variant='outline'>
-							<Settings size='1.25rem' />
-						</Button>
-					</div>
-				</div>
-				<div className='w-full space-y-4 max-lg:space-y-0 lg:w-2/3'>
+				)}
+
+				<div className='min-h-96 w-full space-y-4 max-lg:space-y-0 lg:w-2/3'>
 					<div
 						className='group relative flex h-full justify-between gap-4 overflow-hidden rounded-lg bg-cover p-4 pr-2 pt-4 brightness-90 contrast-[1.1] max-md:min-h-52 md:max-lg:min-h-96'
 						style={{
@@ -252,6 +256,7 @@ export default function KillfeedGenerator() {
 											<DeathNotice
 												deathnoticeData={dn}
 												className='backdrop-blur animate-in fade-in'
+												colors={currentColors}
 											/>
 										</div>
 									);
