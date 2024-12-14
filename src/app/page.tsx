@@ -1,5 +1,5 @@
 import { toPng } from 'html-to-image';
-import { Pi, Settings, Trash2 } from 'lucide-react';
+import { Github, Pi, Settings, Trash2 } from 'lucide-react';
 import { startTransition, useRef, useState } from 'react';
 
 import DeathNotice, { Colors, DeathNoticeT } from '@/components/deathnotice';
@@ -125,10 +125,18 @@ export default function KillfeedGenerator() {
 			</div>
 
 			<div className='flex w-full items-end justify-between pb-4'>
-				<div>
-					<h1 className='text-2xl font-bold max-[520px]:absolute max-[520px]:opacity-0'>
+				<div className='flex items-end gap-2'>
+					<h1 className='text-nowrap text-2xl font-bold max-[520px]:absolute max-[520px]:opacity-0'>
 						CS2 Killfeed Generator
 					</h1>
+					<Button
+						className='rounded-full hover:bg-white/10'
+						variant='ghost'
+						size='icon'
+						onClick={() => window.open('https://github.com/ChetdeJong/cs2-killfeed-generator')}
+					>
+						<img src='/github-icon.svg' className='size-8'></img>
+					</Button>
 				</div>
 				<Select value={map} onValueChange={(v) => setMap(v as (typeof MAPS)[number])}>
 					<SelectTrigger className='w-48 max-[520px]:ml-auto'>
