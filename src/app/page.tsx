@@ -1,8 +1,8 @@
 import { toPng } from 'html-to-image';
-import { Settings, Trash2 } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { Pi, Settings, Trash2 } from 'lucide-react';
+import { startTransition, useRef, useState } from 'react';
 
-import DeathNotice, { DeathNoticeT } from '@/components/deathnotice';
+import DeathNotice, { Colors, DeathNoticeT } from '@/components/deathnotice';
 import SettingsDialog from '@/components/settings';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -80,6 +80,12 @@ export default function KillfeedGenerator() {
 	const [currentColors, setCurrentColors] = useLocalStorage('colors', DEFAULT_COLORS);
 	const [resolution, setResolution] = useLocalStorage('resolution', DEFAULT_RESOLUTION);
 
+	const transitionColors = (value: Colors | ((prevValue: Colors) => Colors)) => {
+		startTransition(() => {
+			setCurrentColors(value);
+		});
+	};
+
 	const ref = useRef<HTMLDivElement>(null);
 	const scale = (resolution.height / 1080) * 0.9;
 	const exportKillfeed = () => {
@@ -143,7 +149,7 @@ export default function KillfeedGenerator() {
 						open={settingsOpen}
 						setOpen={setSettingsOpen}
 						colors={currentColors}
-						setColors={setCurrentColors}
+						setColors={transitionColors}
 						resolution={resolution}
 						setResolution={setResolution}
 					/>
