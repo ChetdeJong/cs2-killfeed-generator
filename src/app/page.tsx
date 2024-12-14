@@ -103,156 +103,160 @@ export default function KillfeedGenerator() {
 	};
 
 	return (
-		<div className='flex w-full flex-col gap-4 p-4 lg:flex-row min-[1400px]:px-32'>
-			<div className='w-full space-y-4 pt-2 md:max-lg:relative md:max-lg:flex md:max-lg:items-start md:max-lg:gap-4 lg:w-1/3'>
-				<div className='contents space-y-4 md:max-lg:flex md:max-lg:w-1/2 md:max-lg:flex-col lg:contents'>
-					<div className='flex w-full items-center justify-between max-[500px]:opacity-0'>
-						<h1 className='text-2xl font-bold'>CS2 Killfeed Generator</h1>
+		<div className='p-4 min-[1400px]:px-32'>
+			<div className='flex w-full items-end justify-between pb-4'>
+				<h1 className='text-2xl font-bold max-[500px]:absolute max-[500px]:opacity-0'>
+					CS2 Killfeed Generator
+				</h1>
+				<Select value={map} onValueChange={(v) => setMap(v as (typeof MAPS)[number])}>
+					<SelectTrigger className='w-48 max-[500px]:ml-auto'>
+						<SelectValue placeholder='Select background' />
+					</SelectTrigger>
+					<SelectContent>
+						{MAPS.map((m, i) => (
+							<SelectItem key={i} value={m}>
+								{m}
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
+			</div>
+			<div className='flex w-full flex-col gap-4 lg:flex-row'>
+				<div className='w-full space-y-4 md:max-lg:relative md:max-lg:flex md:max-lg:items-start md:max-lg:gap-4 lg:w-1/3'>
+					<div className='contents space-y-4 md:max-lg:flex md:max-lg:w-1/2 md:max-lg:flex-col lg:contents'>
+						<NameInput
+							placeholder='Killer name'
+							value={currentEntry.attacker}
+							side={currentEntry.attackerSide}
+							setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, attacker: v }))}
+							setSide={(v) => setCurrentEntry((prev) => ({ ...prev, attackerSide: v }))}
+						/>
+						<NameInput
+							placeholder='Victim name'
+							value={currentEntry.victim}
+							side={currentEntry.victimSide}
+							setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, victim: v }))}
+							setSide={(v) => setCurrentEntry((prev) => ({ ...prev, victimSide: v }))}
+						/>
+						<NameInput
+							placeholder='Assister name (optional)'
+							value={currentEntry.assister || ''}
+							side={currentEntry.assisterSide || 'CT'}
+							setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, assister: v }))}
+							setSide={(v) => setCurrentEntry((prev) => ({ ...prev, assisterSide: v }))}
+						/>
+						<WeaponSelection
+							value={currentEntry.weapon}
+							setValue={(v) => setCurrentEntry((prev) => ({ ...prev, weapon: v }))}
+						/>
 					</div>
-					<NameInput
-						placeholder='Killer name'
-						value={currentEntry.attacker}
-						side={currentEntry.attackerSide}
-						setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, attacker: v }))}
-						setSide={(v) => setCurrentEntry((prev) => ({ ...prev, attackerSide: v }))}
-					/>
-					<NameInput
-						placeholder='Victim name'
-						value={currentEntry.victim}
-						side={currentEntry.victimSide}
-						setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, victim: v }))}
-						setSide={(v) => setCurrentEntry((prev) => ({ ...prev, victimSide: v }))}
-					/>
-					<NameInput
-						placeholder='Assister name (optional)'
-						value={currentEntry.assister || ''}
-						side={currentEntry.assisterSide || 'CT'}
-						setInputValue={(v) => setCurrentEntry((prev) => ({ ...prev, assister: v }))}
-						setSide={(v) => setCurrentEntry((prev) => ({ ...prev, assisterSide: v }))}
-					/>
-					<WeaponSelection
-						value={currentEntry.weapon}
-						setValue={(v) => setCurrentEntry((prev) => ({ ...prev, weapon: v }))}
-					/>
+					<div className='grid grid-cols-3 gap-2 overflow-hidden md:max-lg:w-1/2'>
+						<Button
+							variant={currentEntry.headshot ? 'default' : 'outline'}
+							onClick={() => setCurrentEntry((prev) => ({ ...prev, headshot: !prev.headshot }))}
+						>
+							Headshot
+						</Button>
+						<Button
+							variant={currentEntry.penetrate ? 'default' : 'outline'}
+							onClick={() => setCurrentEntry((prev) => ({ ...prev, penetrate: !prev.penetrate }))}
+						>
+							Wallbang
+						</Button>
+						<Button
+							variant={currentEntry.noscope ? 'default' : 'outline'}
+							onClick={() => setCurrentEntry((prev) => ({ ...prev, noscope: !prev.noscope }))}
+						>
+							Noscope
+						</Button>
+						<Button
+							variant={currentEntry.smoke ? 'default' : 'outline'}
+							onClick={() => setCurrentEntry((prev) => ({ ...prev, smoke: !prev.smoke }))}
+						>
+							Through Smoke
+						</Button>
+						<Button
+							variant={currentEntry.inair ? 'default' : 'outline'}
+							onClick={() => setCurrentEntry((prev) => ({ ...prev, inair: !prev.inair }))}
+						>
+							In Air
+						</Button>
+						<Button
+							variant={currentEntry.blind ? 'default' : 'outline'}
+							onClick={() => setCurrentEntry((prev) => ({ ...prev, blind: !prev.blind }))}
+						>
+							Blind
+						</Button>
+						<Button
+							variant={currentEntry.flashAssist ? 'default' : 'outline'}
+							onClick={() => setCurrentEntry((prev) => ({ ...prev, flashAssist: !prev.flashAssist }))}
+						>
+							Flash Assist
+						</Button>
+						<Button
+							variant={currentEntry.isLocal ? 'default' : 'outline'}
+							onClick={() => setCurrentEntry((prev) => ({ ...prev, isLocal: !prev.isLocal }))}
+						>
+							Red Border
+						</Button>
+					</div>
+					<div className='flex items-center gap-2 md:max-lg:absolute md:max-lg:bottom-0 md:max-lg:right-0 md:max-lg:w-1/2 md:max-lg:pl-2'>
+						<Button
+							disabled={!(currentEntry.attacker && currentEntry.victim && currentEntry.weapon)}
+							className='flex-grow'
+							onClick={() => {
+								if (currentEntry.attacker && currentEntry.victim && currentEntry.weapon) {
+									setDeathnotices([...deathnotices, currentEntry]);
+								}
+							}}
+						>
+							Add entry
+						</Button>
+						<Button disabled={deathnotices.length === 0} onClick={exportKillfeed}>
+							Export Killfeed
+						</Button>
+						<Button size='icon' variant='outline'>
+							<Settings size='1.25rem' />
+						</Button>
+					</div>
 				</div>
-				<div className='grid grid-cols-3 gap-2 overflow-hidden md:max-lg:w-1/2 md:max-lg:pt-8'>
-					<Button
-						variant={currentEntry.headshot ? 'default' : 'outline'}
-						onClick={() => setCurrentEntry((prev) => ({ ...prev, headshot: !prev.headshot }))}
-					>
-						Headshot
-					</Button>
-					<Button
-						variant={currentEntry.penetrate ? 'default' : 'outline'}
-						onClick={() => setCurrentEntry((prev) => ({ ...prev, penetrate: !prev.penetrate }))}
-					>
-						Wallbang
-					</Button>
-					<Button
-						variant={currentEntry.noscope ? 'default' : 'outline'}
-						onClick={() => setCurrentEntry((prev) => ({ ...prev, noscope: !prev.noscope }))}
-					>
-						Noscope
-					</Button>
-					<Button
-						variant={currentEntry.smoke ? 'default' : 'outline'}
-						onClick={() => setCurrentEntry((prev) => ({ ...prev, smoke: !prev.smoke }))}
-					>
-						Through Smoke
-					</Button>
-					<Button
-						variant={currentEntry.inair ? 'default' : 'outline'}
-						onClick={() => setCurrentEntry((prev) => ({ ...prev, inair: !prev.inair }))}
-					>
-						In Air
-					</Button>
-					<Button
-						variant={currentEntry.blind ? 'default' : 'outline'}
-						onClick={() => setCurrentEntry((prev) => ({ ...prev, blind: !prev.blind }))}
-					>
-						Blind
-					</Button>
-					<Button
-						variant={currentEntry.flashAssist ? 'default' : 'outline'}
-						onClick={() => setCurrentEntry((prev) => ({ ...prev, flashAssist: !prev.flashAssist }))}
-					>
-						Flash Assist
-					</Button>
-					<Button
-						variant={currentEntry.isLocal ? 'default' : 'outline'}
-						onClick={() => setCurrentEntry((prev) => ({ ...prev, isLocal: !prev.isLocal }))}
-					>
-						Red Border
-					</Button>
-				</div>
-				<div className='flex items-center gap-2 md:max-lg:absolute md:max-lg:bottom-0 md:max-lg:right-0 md:max-lg:w-1/2 md:max-lg:pl-2'>
-					<Button
-						disabled={!(currentEntry.attacker && currentEntry.victim && currentEntry.weapon)}
-						className='flex-grow'
-						onClick={() => {
-							if (currentEntry.attacker && currentEntry.victim && currentEntry.weapon) {
-								setDeathnotices([...deathnotices, currentEntry]);
-							}
+				<div className='w-full space-y-4 max-lg:space-y-0 lg:w-2/3'>
+					<div
+						className='group relative flex h-full justify-between gap-4 overflow-hidden rounded-lg bg-cover p-4 pr-2 pt-4 brightness-90 contrast-[1.1] max-md:min-h-52 md:max-lg:min-h-96'
+						style={{
+							backgroundImage: `url(${new URL('/maps/' + map + '.jpg', import.meta.url).href})`
 						}}
 					>
-						Add entry
-					</Button>
-					<Button disabled={deathnotices.length === 0} onClick={exportKillfeed}>
-						Export Killfeed
-					</Button>
-					<Button size='icon' variant='outline'>
-						<Settings size='1.25rem' />
-					</Button>
-				</div>
-			</div>
-			<div className='w-full space-y-4 max-lg:space-y-0 lg:w-2/3'>
-				<div className='mb-2 flex items-center justify-end max-lg:absolute max-lg:right-0 max-lg:top-0 max-lg:pr-4 max-lg:pt-4'>
-					<Select value={map} onValueChange={(v) => setMap(v as (typeof MAPS)[number])}>
-						<SelectTrigger className='w-[180px]'>
-							<SelectValue placeholder='Select background' />
-						</SelectTrigger>
-						<SelectContent>
-							{MAPS.map((m, i) => (
-								<SelectItem key={i} value={m}>
-									{m}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
-				<div
-					className='group relative flex h-full justify-between gap-4 overflow-hidden rounded-lg bg-cover p-4 pr-2 pt-4 brightness-90 contrast-[1.1] max-md:min-h-52 md:max-lg:min-h-96'
-					style={{
-						backgroundImage: `url(${new URL('/maps/' + map + '.jpg', import.meta.url).href})`
-					}}
-				>
-					<Button
-						variant='destructive'
-						className='z-[1] opacity-0 transition-all disabled:hidden group-hover:opacity-100'
-						onClick={() => setDeathnotices([])}
-						disabled={deathnotices.length === 0}
-					>
-						Remove all
-					</Button>
-					<div className='z-[1] flex select-none flex-col items-end leading-5' ref={ref}>
-						{deathnotices.length > 0 &&
-							deathnotices.map((dn, i) => {
-								return (
-									<div key={`dn-${i}`} className='flex items-center gap-2'>
-										<Button
-											variant='destructive'
-											className='mt-1.5 size-[1.85rem] rounded-sm opacity-0 transition-all group-hover:opacity-100'
-											onClick={() => setDeathnotices((prev) => prev.filter((_, i2) => i2 !== i))}
-										>
-											<Trash2 size='1.1rem' />
-										</Button>
-										<DeathNotice
-											deathnoticeData={dn}
-											className='backdrop-blur animate-in fade-in'
-										/>
-									</div>
-								);
-							})}
+						<Button
+							variant='destructive'
+							className='z-[1] opacity-0 transition-all focus:opacity-100 disabled:hidden group-hover:opacity-100'
+							onClick={() => setDeathnotices([])}
+							disabled={deathnotices.length === 0}
+						>
+							Remove all
+						</Button>
+						<div className='z-[1] flex select-none flex-col items-end leading-5' ref={ref}>
+							{deathnotices.length > 0 &&
+								deathnotices.map((dn, i) => {
+									return (
+										<div key={`dn-${i}`} className='flex items-center gap-2'>
+											<Button
+												variant='destructive'
+												className='mt-1.5 size-[1.85rem] rounded-sm opacity-0 transition-all focus:opacity-100 group-hover:opacity-100'
+												onClick={() =>
+													setDeathnotices((prev) => prev.filter((_, i2) => i2 !== i))
+												}
+											>
+												<Trash2 size='1.1rem' />
+											</Button>
+											<DeathNotice
+												deathnoticeData={dn}
+												className='backdrop-blur animate-in fade-in'
+											/>
+										</div>
+									);
+								})}
+						</div>
 					</div>
 				</div>
 			</div>
