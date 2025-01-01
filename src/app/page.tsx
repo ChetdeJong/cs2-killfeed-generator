@@ -1,5 +1,5 @@
 import { toPng } from 'html-to-image';
-import { Github, Pi, Settings, Trash2 } from 'lucide-react';
+import { FileInput, Github, Pi, Settings, Trash2 } from 'lucide-react';
 import { startTransition, useRef, useState } from 'react';
 
 import DeathNotice, { Colors, DeathNoticeT } from '@/components/deathnotice';
@@ -12,7 +12,7 @@ import { DEFAULT_COLORS, DEFAULT_RESOLUTION, MAPS } from '@/consts';
 import { useLocalStorage } from '@/hooks';
 import { cn } from '@/lib/utils';
 
-interface NameInputProps {
+interface NameInputProps extends React.HTMLAttributes<HTMLDivElement> {
 	placeholder: string;
 	value: string;
 	side: 'CT' | 'T';
@@ -20,9 +20,9 @@ interface NameInputProps {
 	setSide: (side: 'CT' | 'T') => void;
 }
 
-function NameInput({ placeholder, value, side, setInputValue, setSide }: NameInputProps) {
+function NameInput({ placeholder, value, side, setInputValue, setSide, className }: NameInputProps) {
 	return (
-		<div className='flex gap-2'>
+		<div className={cn('flex gap-2', className)}>
 			<Input
 				spellCheck={false}
 				value={value}
@@ -104,7 +104,7 @@ export default function KillfeedGenerator() {
 	};
 
 	return (
-		<div className='p-4 min-[1400px]:px-32'>
+		<div className='p-4 transition-all min-[1400px]:px-32 min-[1600px]:px-44'>
 			<div
 				ref={ref}
 				className='absolute left-0 top-0 z-[-1] bg-transparent'
@@ -125,17 +125,20 @@ export default function KillfeedGenerator() {
 			</div>
 
 			<div className='flex w-full items-end justify-between pb-4'>
-				<div className='flex items-end gap-2'>
-					<h1 className='text-nowrap text-2xl font-bold max-[520px]:absolute max-[520px]:opacity-0'>
+				<div className='flex items-center gap-2'>
+					<h1 className='text-nowrap text-2xl font-bold max-[670px]:absolute max-[670px]:z-[-1] max-[670px]:opacity-0'>
 						CS2 Killfeed Generator
 					</h1>
 					<Button
-						className='rounded-full hover:bg-white/10'
+						className='size-10 rounded-full hover:bg-white/10'
 						variant='ghost'
 						size='icon'
 						onClick={() => window.open('https://github.com/ChetdeJong/cs2-killfeed-generator')}
 					>
-						<img src='/github-icon.svg' className='size-8'></img>
+						<img src='/github-icon.svg' className='size-6'></img>
+					</Button>
+					<Button variant={'link'} className='px-0' onClick={() => window.open('')}>
+						Learn how to use
 					</Button>
 				</div>
 				<Select value={map} onValueChange={(v) => setMap(v as (typeof MAPS)[number])}>
@@ -162,7 +165,7 @@ export default function KillfeedGenerator() {
 						setResolution={setResolution}
 					/>
 				) : (
-					<div className='w-full space-y-4 duration-300 animate-in fade-in-50 slide-in-from-left-1/2 md:max-lg:relative md:max-lg:flex md:max-lg:items-start md:max-lg:gap-4 lg:w-1/3'>
+					<div className='w-full space-y-4 duration-300 animate-in fade-in-50 slide-in-from-left-10 md:max-lg:relative md:max-lg:flex md:max-lg:items-start md:max-lg:gap-4 lg:w-1/3'>
 						<div className='contents space-y-4 md:max-lg:flex md:max-lg:w-1/2 md:max-lg:flex-col lg:contents'>
 							<NameInput
 								placeholder='Killer name'
@@ -192,49 +195,49 @@ export default function KillfeedGenerator() {
 						</div>
 						<div className='grid grid-cols-3 gap-2 overflow-hidden md:max-lg:w-1/2'>
 							<Button
-								variant={currentEntry.headshot ? 'default' : 'outline'}
+								variant={currentEntry.headshot ? 'selected' : 'outline'}
 								onClick={() => setCurrentEntry((prev) => ({ ...prev, headshot: !prev.headshot }))}
 							>
 								Headshot
 							</Button>
 							<Button
-								variant={currentEntry.penetrate ? 'default' : 'outline'}
+								variant={currentEntry.penetrate ? 'selected' : 'outline'}
 								onClick={() => setCurrentEntry((prev) => ({ ...prev, penetrate: !prev.penetrate }))}
 							>
 								Wallbang
 							</Button>
 							<Button
-								variant={currentEntry.noscope ? 'default' : 'outline'}
+								variant={currentEntry.noscope ? 'selected' : 'outline'}
 								onClick={() => setCurrentEntry((prev) => ({ ...prev, noscope: !prev.noscope }))}
 							>
 								Noscope
 							</Button>
 							<Button
-								variant={currentEntry.smoke ? 'default' : 'outline'}
+								variant={currentEntry.smoke ? 'selected' : 'outline'}
 								onClick={() => setCurrentEntry((prev) => ({ ...prev, smoke: !prev.smoke }))}
 							>
 								Through Smoke
 							</Button>
 							<Button
-								variant={currentEntry.inair ? 'default' : 'outline'}
+								variant={currentEntry.inair ? 'selected' : 'outline'}
 								onClick={() => setCurrentEntry((prev) => ({ ...prev, inair: !prev.inair }))}
 							>
 								In Air
 							</Button>
 							<Button
-								variant={currentEntry.blind ? 'default' : 'outline'}
+								variant={currentEntry.blind ? 'selected' : 'outline'}
 								onClick={() => setCurrentEntry((prev) => ({ ...prev, blind: !prev.blind }))}
 							>
 								Blind
 							</Button>
 							<Button
-								variant={currentEntry.flashAssist ? 'default' : 'outline'}
+								variant={currentEntry.flashAssist ? 'selected' : 'outline'}
 								onClick={() => setCurrentEntry((prev) => ({ ...prev, flashAssist: !prev.flashAssist }))}
 							>
 								Flash Assist
 							</Button>
 							<Button
-								variant={currentEntry.isLocal ? 'default' : 'outline'}
+								variant={currentEntry.isLocal ? 'selected' : 'outline'}
 								onClick={() => setCurrentEntry((prev) => ({ ...prev, isLocal: !prev.isLocal }))}
 							>
 								Red Border
@@ -255,7 +258,7 @@ export default function KillfeedGenerator() {
 							<Button disabled={deathnotices.length === 0} onClick={exportKillfeed}>
 								Export Killfeed
 							</Button>
-							<Button size='icon' variant='outline' onClick={() => setSettingsOpen(true)}>
+							<Button size='icon' variant='secondary' onClick={() => setSettingsOpen(true)}>
 								<Settings size='1.25rem' />
 							</Button>
 						</div>
@@ -275,16 +278,16 @@ export default function KillfeedGenerator() {
 							onClick={() => setDeathnotices([])}
 							disabled={deathnotices.length === 0}
 						>
-							Remove all
+							Clear
 						</Button>
 						<div className='z-[1] flex select-none flex-col items-end leading-5'>
 							{deathnotices.length > 0 &&
 								deathnotices.map((dn, i) => {
 									return (
-										<div key={`dn-${i}`} className='flex items-center gap-2'>
+										<div key={`dn-${i}`} className='flex w-full items-center gap-2'>
 											<Button
 												variant='destructive'
-												className='mt-1.5 size-[1.85rem] rounded-sm opacity-0 transition-all focus:opacity-100 group-hover:opacity-100'
+												className='mr-auto mt-1.5 size-[1.85rem] rounded-sm opacity-0 transition-all focus:opacity-100 group-hover:opacity-100'
 												onClick={() =>
 													setDeathnotices((prev) => prev.filter((_, i2) => i2 !== i))
 												}

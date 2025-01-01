@@ -31,7 +31,7 @@ export default function SettingsDialog({
 	return (
 		<div
 			{...props}
-			className='flex flex-col gap-4 text-nowrap duration-300 animate-in fade-in-50 slide-in-from-left-1/2 lg:w-1/3'
+			className='flex flex-col gap-4 text-nowrap duration-300 animate-in fade-in-50 slide-in-from-left-10 lg:w-1/3'
 		>
 			<Button size='icon' variant='ghost' onClick={() => setOpen(false)}>
 				<ArrowLeft size='1.25rem' />
