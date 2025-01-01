@@ -1,0 +1,9 @@
+ct,donk,t,sjuush,,,ak47,true,false,false,false,false,false,false,false
+ct,donk,t,NertZ,,,ak47,true,false,false,false,false,false,false,false
+ct,donk,t,degster,,,ak47,true,false,false,false,false,false,false,false
+ct,donk,t,kyxsan,,,ak47,false,false,false,false,false,false,false,false
+ct,donk,t,TeSeS,,,ak47,false,false,false,false,false,false,false,false
+
+# Format
+# AttackerSide,AttackerName,VictimSide,VictimName,AssisterSide,AssisterName,Weapon,Headshot,Wallbang,Noscope,Smoke,Blind,InAir,FlashAssist,RedBorder
+# Could be tab separated e.g. if used with google spreadsheets

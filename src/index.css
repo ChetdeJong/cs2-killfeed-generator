@@ -103,7 +103,7 @@ body {
 	background: white;
 }
 
-* {
+#root * {
 	user-select: none;
 }
 

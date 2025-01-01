@@ -3,6 +3,7 @@ import { FileInput, Github, Pi, Settings, Trash2 } from 'lucide-react';
 import { startTransition, useRef, useState } from 'react';
 
 import DeathNotice, { Colors, DeathNoticeT } from '@/components/deathnotice';
+import ImportPopup from '@/components/import-popup';
 import SettingsDialog from '@/components/settings';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -261,6 +262,7 @@ export default function KillfeedGenerator() {
 							<Button size='icon' variant='secondary' onClick={() => setSettingsOpen(true)}>
 								<Settings size='1.25rem' />
 							</Button>
+							<ImportPopup setDeathnotices={setDeathnotices} />
 						</div>
 					</div>
 				)}
