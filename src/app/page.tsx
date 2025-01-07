@@ -89,7 +89,7 @@ export default function KillfeedGenerator() {
 	};
 
 	const ref = useRef<HTMLDivElement>(null);
-	const scale = (resolution.height / 1080) * 0.9;
+	const scale = resolution.height / 1080;
 	const exportKillfeed = () => {
 		if (!ref.current) return;
 		toPng(ref.current, {
