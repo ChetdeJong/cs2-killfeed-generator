@@ -140,7 +140,11 @@ export default function KillfeedGenerator() {
 					>
 						<img src='/github-icon.svg' className='size-6'></img>
 					</Button>
-					<Button variant={'link'} className='px-0' onClick={() => window.open('')}>
+					<Button
+						variant={'link'}
+						className='px-0'
+						onClick={() => window.open('https://youtu.be/RT8CdiAPt6o')}
+					>
 						Learn how to use
 					</Button>
 				</div>
