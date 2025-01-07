@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 
 export default [
 	{
-		ignores: ['dist', '**/*.js']
+		ignores: ['dist', '**/*.js', 'eslint.config.mjs']
 	},
 	js.configs.recommended,
 	...tseslint.configs.recommended,
@@ -24,7 +24,7 @@ export default [
 	reactPlugin.configs.flat['jsx-runtime'],
 	prettier,
 	{
-		files: ['src/**/*.ts', 'src/**/*.tsx'],
+		files: ['src/**/*.ts', 'src/**/*.tsx', 'vite.config.ts',],
 		languageOptions: {
 			parserOptions: {
 				project: [path.join(__dirname, 'tsconfig.node.json'), path.join(__dirname, 'tsconfig.app.json')]
