@@ -22,7 +22,8 @@
 		"dev": "vite",
 		"build": "tsc -b && vite build",
 		"formatcss": "prettier -c ./src/**/*.css --write",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"deploy": "rmdir /s /q dist && npm run build && gh-pages -d dist -cname killfeed.chetdejong.com"
 	},
 	"dependencies": {
 		"@radix-ui/react-dialog": "^1.1.2",
@@ -59,6 +60,7 @@
 		"eslint-plugin-react-hooks": "^5.0.0",
 		"eslint-plugin-react-refresh": "^0.4.14",
 		"eslint-plugin-simple-import-sort": "^12.1.1",
+		"gh-pages": "^6.3.0",
 		"globals": "^15.12.0",
 		"postcss": "^8.4.49",
 		"prettier": "^3.4.2",
