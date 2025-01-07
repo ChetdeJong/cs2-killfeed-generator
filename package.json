@@ -23,7 +23,7 @@
 		"build": "tsc -b && vite build",
 		"formatcss": "prettier -c ./src/**/*.css --write",
 		"preview": "vite preview",
-		"deploy": "rmdir /s /q dist && npm run build && gh-pages -d dist -cname killfeed.chetdejong.com"
+		"deploy": "rmdir /s /q dist || npm run build && gh-pages -d dist --cname killfeed.chetdejong.com"
 	},
 	"dependencies": {
 		"@radix-ui/react-dialog": "^1.1.2",
