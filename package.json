@@ -37,6 +37,7 @@
 		"cmdk": "^1.0.0",
 		"html-to-image": "^1.11.11",
 		"lucide-react": "^0.468.0",
+		"posthog-js": "^1.204.0",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
 		"tailwind-merge": "^2.5.5"

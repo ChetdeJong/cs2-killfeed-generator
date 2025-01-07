@@ -1,4 +1,5 @@
 import { FileInput } from 'lucide-react';
+import posthog from 'posthog-js';
 import { useEffect, useState } from 'react';
 
 import { DeathNoticeT } from '@/components/deathnotice';
@@ -59,6 +60,7 @@ export default function ImportPopup({ setDeathnotices }: ImportPopupProps) {
 			if (deathnotices.length === 0) return;
 			setOpen(false);
 			setDeathnotices(deathnotices);
+			posthog.capture('import_from_clipboard');
 		};
 		if (open) {
 			document.addEventListener('paste', handlePaste);

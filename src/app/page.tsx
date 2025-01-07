@@ -1,5 +1,6 @@
 import { toPng } from 'html-to-image';
-import { FileInput, Github, Pi, Settings, Trash2 } from 'lucide-react';
+import { Settings, Trash2 } from 'lucide-react';
+import posthog from 'posthog-js';
 import { startTransition, useRef, useState } from 'react';
 
 import DeathNotice, { Colors, DeathNoticeT } from '@/components/deathnotice';
@@ -100,6 +101,7 @@ export default function KillfeedGenerator() {
 				link.download = `killfeed_${resolution.width}x${resolution.height}.png`;
 				link.href = dataUrl;
 				link.click();
+				posthog.capture('export_killfeed');
 			})
 			.catch((err) => console.error(err));
 	};
