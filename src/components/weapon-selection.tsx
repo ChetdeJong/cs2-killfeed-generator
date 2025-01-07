@@ -34,10 +34,9 @@ export default function WeaponSelection({ value, setValue }: WeaponSelectionProp
 								{Object.entries(WEAPONS).map(([key, displayName]) => (
 									<CommandItem
 										key={key}
-										value={key}
 										className='relative pl-8'
 										onSelect={(currentValue) => {
-											setValue(currentValue === value ? '' : currentValue);
+											setValue(displayName === value ? '' : key);
 											setOpen(false);
 										}}
 									>
