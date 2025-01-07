@@ -1,0 +1,15 @@
+# Logs
+logs
+*.log
+
+*.tsbuildinfo
+node_modules
+package-lock.json
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
