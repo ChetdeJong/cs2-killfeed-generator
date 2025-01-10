@@ -28,6 +28,7 @@ const DeathNoticeIcon = ({ data, className }: DeathNoticeIconProps) => {
 			className={cn('mx-[2px] mb-0 mt-[-2px] h-[24px] object-contain align-middle', className)}
 			src={src}
 			alt={data.type === 'weapon' ? data.weapon : data.type}
+			crossOrigin='anonymous'
 		/>
 	);
 };

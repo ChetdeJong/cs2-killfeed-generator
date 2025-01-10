@@ -104,6 +104,11 @@ export default function KillfeedGenerator() {
 		}
 
 		toPng(ref.current, {
+			fetchRequestInit: {
+				mode: 'cors',
+				credentials: 'omit',
+				cache: 'no-cache'
+			},
 			cacheBust: true,
 			pixelRatio: 1
 		})
