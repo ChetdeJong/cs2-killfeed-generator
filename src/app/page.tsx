@@ -90,20 +90,35 @@ export default function KillfeedGenerator() {
 
 	const ref = useRef<HTMLDivElement>(null);
 	const scale = resolution.height / 1080;
-	const exportKillfeed = () => {
+	const exportKillfeed = async () => {
 		if (!ref.current) return;
+		const link = document.createElement('a');
+		ref.current.style.display = 'block';
+
+		// workaround, so it renders correctly on mobile
+		if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+			await toPng(ref.current, {
+				cacheBust: true,
+				pixelRatio: 1
+			});
+		}
+
 		toPng(ref.current, {
 			cacheBust: true,
 			pixelRatio: 1
 		})
 			.then((dataUrl) => {
-				const link = document.createElement('a');
 				link.download = `killfeed_${resolution.width}x${resolution.height}.png`;
 				link.href = dataUrl;
 				link.click();
 				posthog.capture('export_killfeed');
 			})
-			.catch((err) => console.error(err));
+			.catch((err) => console.error(err))
+			.finally(() => {
+				link.remove();
+				if (!ref.current) return;
+				ref.current.style.display = 'none';
+			});
 	};
 
 	return (
@@ -111,7 +126,7 @@ export default function KillfeedGenerator() {
 			<div
 				ref={ref}
 				className='absolute left-0 top-0 z-[-1] bg-transparent'
-				style={{ width: resolution.width, height: resolution.height }}
+				style={{ width: resolution.width, height: resolution.height, display: 'none' }}
 			>
 				<div
 					className='flex flex-col items-end pr-2 pt-16'
