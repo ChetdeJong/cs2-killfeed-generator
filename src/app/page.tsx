@@ -1,5 +1,5 @@
 import { toPng } from 'html-to-image';
-import { Settings, Trash2 } from 'lucide-react';
+import { ExternalLink, Settings, Trash2 } from 'lucide-react';
 import posthog from 'posthog-js';
 import { startTransition, useRef, useState } from 'react';
 
@@ -162,10 +162,11 @@ export default function KillfeedGenerator() {
 					</Button>
 					<Button
 						variant={'link'}
-						className='px-0'
+						className='px-0 underline'
 						onClick={() => window.open('https://youtu.be/RT8CdiAPt6o')}
 					>
 						Learn how to use
+						<ExternalLink size='1rem' />
 					</Button>
 				</div>
 				<Select value={map} onValueChange={(v) => setMap(v as (typeof MAPS)[number])}>

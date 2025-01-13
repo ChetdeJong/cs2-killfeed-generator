@@ -1,4 +1,4 @@
-import { FileInput } from 'lucide-react';
+import { ExternalLink, FileInput } from 'lucide-react';
 import posthog from 'posthog-js';
 import { useEffect, useState } from 'react';
 
@@ -112,21 +112,23 @@ export default function ImportPopup({ setDeathnotices }: ImportPopupProps) {
 					<p>
 						<a
 							href='https://github.com/ChetdeJong/cs2-killfeed-generator/blob/master/public/weapons-list.txt'
-							className='text-primary-foreground underline-offset-4 hover:underline'
+							className='flex items-center gap-2 text-primary-foreground underline underline-offset-4'
 							target='_blank'
 							rel='noreferrer'
 						>
 							Click here to see weapons list.
+							<ExternalLink size='1rem' />
 						</a>
 					</p>
 					<p>
 						<a
 							href='https://github.com/ChetdeJong/cs2-killfeed-generator/blob/master/public/import-example.txt'
-							className='text-primary-foreground underline-offset-4 hover:underline'
+							className='flex items-center gap-2 text-primary-foreground underline underline-offset-4'
 							target='_blank'
 							rel='noreferrer'
 						>
 							Click here to see example.
+							<ExternalLink size='1rem' />
 						</a>
 					</p>
 				</div>
