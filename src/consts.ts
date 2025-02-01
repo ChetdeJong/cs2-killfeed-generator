@@ -8,7 +8,8 @@ export const MAPS = [
 	'de_inferno',
 	'de_mirage',
 	'de_nuke',
-	'de_overpass'
+	'de_overpass',
+	'de_train'
 ] as const;
 
 export const DEFAULT_COLORS: Colors = {
