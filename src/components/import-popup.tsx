@@ -17,7 +17,7 @@ const getDeathnotices = (data: string): DeathNoticeT[] => {
 	if (!delim) return result;
 
 	for (const row of rows) {
-		const values = row.split(delim);
+		const values = row.trim().split(delim);
 
 		if (values.length !== 15) continue;
 		if (values[0] === '' || values[1] === '' || values[2] === '' || values[3] === '') continue;
