@@ -80,7 +80,12 @@ export default function KillfeedGenerator() {
 	const [deathnotices, setDeathnotices] = useLocalStorage<DeathNoticeT[]>('deathnotices', []);
 	const [map, setMap] = useLocalStorage<(typeof MAPS)[number]>('map', 'de_mirage');
 	const [currentColors, setCurrentColors] = useLocalStorage('colors', DEFAULT_COLORS);
-	const [resolution, setResolution] = useLocalStorage('resolution', DEFAULT_RESOLUTION);
+	const params = new URLSearchParams(window.location.search);
+	const RESOLUTION = {
+		width: parseInt(params.get('w') ?? `${DEFAULT_RESOLUTION.width}`),
+		height: parseInt(params.get('h') ?? `${DEFAULT_RESOLUTION.height}`)
+	};
+	const [resolution, setResolution] = useLocalStorage('resolution', RESOLUTION);
 
 	const transitionColors = (value: Colors | ((prevValue: Colors) => Colors)) => {
 		startTransition(() => {
