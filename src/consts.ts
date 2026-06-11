@@ -70,6 +70,7 @@ export const WEAPONS = {
 	decoy: 'Decoy Grenade',
 	incgrenade: 'Incendiary Grenade',
 	planted_c4: 'Explosion',
+	icon_suicide: 'Suicide',
 	inferno: 'Fire',
 	knife: 'CT Knife',
 	knife_t: 'T Knife',
